@@ -1,0 +1,285 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="AI 训练师个人作品集——模型评测、数据工程、SFT 与 Prompt Engineering。">
+  <title>AI TRAINER™ — Portfolio</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preconnect" href="https://i.ibb.co" crossorigin>
+  <link rel="preconnect" href="https://d8j0ntlcm91z4.cloudfront.net" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@600&display=swap" rel="stylesheet">
+  <style>
+    :root { --olive:#575234; --ink:#11120d; --paper:#f4f2e8; --line:rgba(255,255,255,.22); }
+    * { box-sizing:border-box; margin:0; padding:0; }
+    html { overscroll-behavior:none; overflow-x:hidden; scroll-behavior:smooth; }
+    body { background:var(--olive); color:#fff; font-family:"Inter Tight",sans-serif; font-weight:600; min-height:100vh; overflow-x:hidden; }
+    body.modal-open { overflow:hidden; }
+    #fiber-cursor { position:fixed; inset:0; z-index:300; width:100vw; height:100vh; display:block; pointer-events:none; }
+    @media(hover:hover) and (pointer:fine){html.fiber-cursor-ready,html.fiber-cursor-ready body,html.fiber-cursor-ready button,html.fiber-cursor-ready a,html.fiber-cursor-ready .gear-item{cursor:none!important}}
+    button, a { color:inherit; font:inherit; }
+    button { border:0; cursor:pointer; }
+    a { text-decoration:none; }
+    :focus-visible { outline:3px solid #d8ff38; outline-offset:3px; }
+    .sr-only { position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; border:0; }
+
+    #background-wrapper { position:fixed; inset:0 0 auto; width:100%; height:100vh; z-index:1; overflow:hidden; background:#1d1e18; }
+    .bg-video { width:100%; height:100%; object-fit:cover; display:block; filter:saturate(.78) contrast(1.04); }
+    .video-fallback { position:absolute; inset:0; display:grid; place-items:center; background:radial-gradient(circle at 70% 30%,#777252,var(--olive) 45%,#181913); opacity:0; transition:opacity .4s; }
+    .video-fallback span { font-size:clamp(4rem,18vw,18rem); mix-blend-mode:difference; }
+    #background-wrapper.is-fallback .video-fallback { opacity:1; }
+
+    #header-container { position:fixed; top:0; left:0; right:0; z-index:100; display:flex; justify-content:space-between; align-items:center; padding:12px 14px 0; pointer-events:none; }
+    .header-group { display:flex; gap:6px; align-items:center; pointer-events:auto; }
+    .cell { background:#fff; color:#000; font-size:18px; letter-spacing:.01em; padding:10px 14px; border-radius:3px; white-space:nowrap; display:inline-flex; align-items:center; justify-content:center; transition:background .2s,color .2s,transform .2s; }
+    a.cell:hover,button.cell:hover { background:#d8ff38; transform:translateY(-2px); }
+    #menu-toggle-btn { display:none !important; }
+    #mobile-menu-overlay { position:fixed; inset:0; z-index:99; opacity:0; pointer-events:none; background:rgba(0,0,0,0); -webkit-backdrop-filter:blur(0); backdrop-filter:blur(0); transition:opacity .4s cubic-bezier(.16,1,.3,1),background-color .4s,-webkit-backdrop-filter .4s,backdrop-filter .4s; }
+    #mobile-menu-overlay.active { opacity:1; pointer-events:auto; background:rgba(0,0,0,.18); -webkit-backdrop-filter:blur(25px); backdrop-filter:blur(25px); }
+    .mobile-menu-content { height:100%; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:14px; }
+    .mobile-menu-content .cell { opacity:0; transform:translateY(20px) scale(.96); transition:opacity .45s cubic-bezier(.16,1,.3,1),transform .45s cubic-bezier(.16,1,.3,1); }
+    #mobile-menu-overlay.active .cell { opacity:1; transform:none; }
+    #mobile-menu-overlay.active .cell:nth-child(2){transition-delay:.04s} #mobile-menu-overlay.active .cell:nth-child(3){transition-delay:.08s} #mobile-menu-overlay.active .cell:nth-child(4){transition-delay:.12s} #mobile-menu-overlay.active .cell:nth-child(5){transition-delay:.16s} #mobile-menu-overlay.active .cell:nth-child(6){transition-delay:.2s} #mobile-menu-overlay.active .cell:nth-child(7){transition-delay:.24s}
+
+    #bottom-title-container { position:fixed; bottom:12px; left:14px; right:14px; z-index:19; pointer-events:none; display:flex; justify-content:center; align-items:flex-end; mix-blend-mode:difference; }
+    .bottom-title-text { max-width:1500px; font-size:clamp(28px,5.5vw,80px); line-height:.94; letter-spacing:-.045em; text-transform:uppercase; color:#fff; text-align:center; will-change:transform,opacity,filter; }
+    .hero-spacer { height:250vh; pointer-events:none; }
+
+    .yellow-text-section { --pscale:1; background:var(--olive); width:100%; padding:224px 24px; display:flex; justify-content:center; align-items:center; position:relative; z-index:20; overflow:hidden; min-height:180vh; }
+    .section-kicker { position:absolute; top:28px; left:24px; font-size:14px; letter-spacing:.08em; text-transform:uppercase; z-index:13; }
+    .text-block-container { max-width:1406px; width:100%; margin:auto; color:#fff; mix-blend-mode:difference; display:flex; flex-direction:column; gap:32px; position:relative; z-index:10; }
+    .text-block-container p { font-size:clamp(24px,4.85vw,70px); line-height:1.05; letter-spacing:-.04em; text-indent:140px; }
+    .parallax-layer { position:absolute; inset:0; pointer-events:none; }
+    .parallax-layer.back { z-index:5; } .parallax-layer.front { z-index:11; }
+    .gear-item { position:absolute; height:auto; filter:drop-shadow(0 30px 35px rgba(0,0,0,.2)); will-change:transform; pointer-events:auto; cursor:grab; touch-action:none; user-select:none; -webkit-user-drag:none; }
+    .gear-item.is-dragging { cursor:grabbing; filter:drop-shadow(0 40px 45px rgba(0,0,0,.32)); }
+    .item-jacket{top:2%;left:7%;width:calc(640px * var(--pscale))}.item-gaiters{top:58%;left:74%;width:calc(346px * var(--pscale))}.item-shorts{top:9%;left:66%;width:calc(326px * var(--pscale))}.item-cap{top:33%;left:7%;width:calc(310px * var(--pscale))}.item-scarf{top:28%;left:64%;width:calc(467px * var(--pscale))}.item-backpack{top:50%;left:37%;width:calc(596px * var(--pscale))}.item-boot{top:72%;left:13%;width:calc(224px * var(--pscale))}
+
+    #work { position:relative; z-index:20; background:var(--olive); }
+    #loop-scroll-spacer { height:3700px; width:100%; position:relative; }
+    .spacer-caption { position:sticky; top:50%; padding:24px; font-size:clamp(38px,7vw,110px); line-height:.86; letter-spacing:-.055em; text-transform:uppercase; opacity:.12; transform:translateY(-50%); }
+    #product-slider-overlay { position:fixed; inset:0; z-index:30; display:flex; clip-path:inset(50% 50% 50% 50%); -webkit-clip-path:inset(50% 50% 50% 50%); pointer-events:none; will-change:clip-path; background:#111; }
+    #product-slider-track { display:flex; height:100%; will-change:transform; }
+    .project-card { width:100vw; height:100vh; flex-shrink:0; position:relative; overflow:hidden; background:var(--ink); border:0; text-align:left; }
+    .project-card::after { content:""; position:absolute; inset:0; background:linear-gradient(180deg,transparent 45%,rgba(0,0,0,.58)); pointer-events:none; }
+    .project-card img { position:relative; z-index:1; width:100%; height:100%; object-fit:cover; object-position:center; display:block; will-change:transform; }
+    .project-card.is-fallback img { opacity:0; }
+    .project-card.is-fallback { background:radial-gradient(circle at 70% 20%,#777253,#22231b 55%,#050505); }
+    .card-index { position:absolute; top:90px; left:32px; z-index:2; font-size:14px; letter-spacing:.1em; }
+    .card-info { position:absolute; bottom:32px; left:32px; right:32px; z-index:3; display:flex; gap:8px; align-items:flex-end; justify-content:space-between; }
+    .card-meta { display:flex; flex-wrap:wrap; gap:8px; }
+    .info-cell { background:#fff; color:#000; font-size:18px; padding:13px; border-radius:3px; letter-spacing:-.03em; }
+    .open-label { background:#d8ff38; color:#000; }
+    #slider-symbol { position:fixed; top:50%; left:50%; transform:translate(-50%,-50%); font-size:min(42vw,600px); line-height:1; color:#fff; mix-blend-mode:difference; z-index:51; opacity:0; pointer-events:none; transition:opacity .2s; }
+
+    .content-section { position:relative; z-index:40; background:var(--paper); color:var(--ink); padding:120px 24px; border-top:1px solid rgba(0,0,0,.15); }
+    .content-section.dark { background:#10110e; color:#fff; }
+    .section-head { display:grid; grid-template-columns:1fr 2fr; gap:24px; align-items:start; margin-bottom:100px; }
+    .eyebrow { font-size:14px; text-transform:uppercase; letter-spacing:.08em; }
+    .section-title { font-size:clamp(52px,9vw,145px); line-height:.82; letter-spacing:-.065em; text-transform:uppercase; }
+    .experience-row { display:grid; grid-template-columns:1fr 1.25fr 2fr; gap:24px; padding:28px 0; border-top:1px solid currentColor; }
+    .placeholder { opacity:.56; }
+    .skill-cloud { display:flex; flex-wrap:wrap; gap:8px; }
+    .skill { padding:14px 16px; border:1px solid currentColor; border-radius:3px; font-size:clamp(18px,2.25vw,34px); transition:background .2s,color .2s; }
+    .skill:hover { background:#fff; color:#000; }
+    .showcase-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:20px; margin-top:72px; }
+    .showcase-card { position:relative; min-height:340px; overflow:hidden; border:1px solid rgba(255,255,255,.72); border-radius:3px; background:#171812; color:#fff; text-align:left; padding:24px; isolation:isolate; }
+    .showcase-card::before { content:""; position:absolute; inset:0; z-index:-2; background:radial-gradient(circle at 72% 28%,rgba(216,255,56,.18),transparent 24%),linear-gradient(135deg,#10110e 20%,#292b1f); transform:scale(1.02); transition:transform .65s cubic-bezier(.16,1,.3,1),filter .65s; }
+    .showcase-card::after { content:attr(data-symbol); position:absolute; right:4%; bottom:-20%; z-index:-1; color:#d8ff38; opacity:.7; font-size:clamp(190px,25vw,390px); line-height:1; mix-blend-mode:screen; transform:rotate(-10deg); transition:transform .65s cubic-bezier(.16,1,.3,1),opacity .4s; }
+    .showcase-card:hover::before,.showcase-card:focus-visible::before { transform:scale(1.08); filter:brightness(1.12); }
+    .showcase-card:hover::after,.showcase-card:focus-visible::after { transform:rotate(0) scale(1.06); opacity:.92; }
+    .showcase-card-top { display:flex; justify-content:space-between; gap:20px; font-size:14px; letter-spacing:.08em; text-transform:uppercase; }
+    .showcase-card-title { position:absolute; left:24px; bottom:24px; max-width:80%; font-size:clamp(34px,5vw,76px); line-height:.88; letter-spacing:-.055em; text-transform:uppercase; }
+    .showcase-card-action { position:absolute; right:24px; bottom:24px; padding:10px 12px; background:#d8ff38; color:#11120d; border-radius:3px; }
+    .resume-grid { display:grid; grid-template-columns:1fr 2fr; gap:24px; }
+    .resume-copy { font-size:clamp(30px,4vw,60px); line-height:1.03; letter-spacing:-.04em; }
+    .resume-actions { margin-top:48px; display:flex; gap:8px; flex-wrap:wrap; }
+    .action { padding:14px 16px; border-radius:3px; background:var(--ink); color:#fff; display:inline-flex; }
+    .action.disabled { opacity:.45; cursor:not-allowed; }
+    .contact-links { margin-top:80px; }
+    .contact-link { display:flex; justify-content:space-between; gap:24px; padding:22px 0; border-top:1px solid currentColor; font-size:clamp(22px,4vw,66px); letter-spacing:-.04em; }
+    .contact-link:hover span:last-child { transform:translateX(8px); }
+    .contact-link span { transition:transform .2s; }
+    #contact { background:#d8ff38; color:var(--ink); }
+    footer { position:relative; z-index:40; background:#d8ff38; color:var(--ink); padding:32px 24px; display:flex; justify-content:space-between; text-transform:uppercase; border-top:1px solid rgba(0,0,0,.3); }
+
+    #project-modal { position:fixed; inset:0; z-index:200; background:var(--paper); color:var(--ink); overflow:auto; opacity:0; visibility:hidden; transform:translateY(20px); transition:opacity .35s,transform .35s,visibility .35s; }
+    #project-modal.open { opacity:1; visibility:visible; transform:none; }
+    .modal-top { position:sticky; top:0; z-index:2; display:flex; justify-content:space-between; padding:12px 14px; pointer-events:none; }
+    .modal-top > * { pointer-events:auto; }
+    .modal-body { padding:110px 24px 120px; max-width:1500px; margin:auto; }
+    .modal-category { text-transform:uppercase; letter-spacing:.08em; font-size:14px; }
+    .modal-title { font-size:clamp(62px,12vw,190px); line-height:.78; letter-spacing:-.07em; text-transform:uppercase; margin:28px 0 80px; }
+    .modal-summary { max-width:1100px; margin-left:auto; font-size:clamp(26px,4vw,60px); line-height:1.03; letter-spacing:-.04em; }
+    .modal-media-grid { display:grid; grid-template-columns:1fr; gap:36px; margin-top:96px; }
+    .modal-media-grid:empty { display:none; }
+    .media-work { border-top:1px solid #222; padding-top:14px; min-width:0; }
+    .media-work video { width:100%; min-height:clamp(360px,58vw,860px); max-height:92vh; display:block; background:#111; border-radius:3px; object-fit:contain; }
+    .media-work.has-materials { display:grid; grid-template-columns:minmax(0,1.7fr) minmax(340px,.8fr); gap:24px; align-items:start; }
+    .media-work.has-materials video { min-height:clamp(520px,52vw,820px); }
+    .work-materials { min-width:0; border-left:1px solid #222; padding-left:20px; }
+    .material-heading { display:flex; justify-content:space-between; gap:12px; margin:0 0 12px; font-size:14px; letter-spacing:.08em; text-transform:uppercase; }
+    .frame-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:8px; }
+    .frame-link { position:relative; display:block; overflow:hidden; border-radius:2px; background:#111; }
+    .frame-link img { width:100%; aspect-ratio:16/9; display:block; object-fit:cover; transition:transform .35s cubic-bezier(.16,1,.3,1); }
+    .frame-link:hover img { transform:scale(1.06); }
+    .frame-number { position:absolute; top:6px; left:6px; padding:4px 6px; border-radius:2px; background:#fff; color:#111; font-size:11px; }
+    .script-panel { margin-top:22px; }
+    .script-frame { width:100%; height:390px; display:block; border:1px solid #222; border-radius:2px; background:#f4f2e8; }
+    .model-gallery { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:16px; }
+    .model-shot { position:relative; display:block; overflow:hidden; border-radius:3px; background:#111; }
+    .model-shot:first-child:nth-last-child(7) { grid-column:1/-1; }
+    .model-shot img { width:100%; aspect-ratio:16/9; display:block; object-fit:cover; transition:transform .55s cubic-bezier(.16,1,.3,1),filter .55s; }
+    .model-shot:hover img { transform:scale(1.035); filter:brightness(1.08); }
+    .model-shot-label { position:absolute; left:12px; bottom:12px; max-width:calc(100% - 24px); padding:8px 10px; border-radius:3px; background:#fff; color:#111; font-size:13px; letter-spacing:.03em; text-transform:uppercase; }
+    .detail-grid { margin-top:120px; }
+    .detail-row { display:grid; grid-template-columns:1fr 3fr; gap:24px; padding:28px 0; border-top:1px solid #222; }
+    .detail-value { font-size:clamp(20px,2vw,30px); line-height:1.3; white-space:pre-line; }
+
+    @media(max-width:1200px){.yellow-text-section{--pscale:.72}.text-block-container p{text-indent:100px}.cell{font-size:16px;padding:10px}.section-head{grid-template-columns:1fr}}
+    @media(max-width:1024px){#clock-text,#header-center,#social-link,#resume-link,#music-toggle{display:none}#menu-toggle-btn{display:inline-flex!important}.yellow-text-section{--pscale:.6}.experience-row{grid-template-columns:1fr 2fr}.experience-row>*:last-child{grid-column:2}.resume-grid{grid-template-columns:1fr}.card-info{left:14px;right:14px;bottom:14px}.card-meta{max-width:75%}}
+    @media(max-width:900px){.media-work.has-materials{grid-template-columns:1fr}.media-work.has-materials video{min-height:280px}.work-materials{border-left:0;border-top:1px solid #222;padding:20px 0 0}}
+    @media(max-width:768px){.yellow-text-section{--pscale:.5;padding:150px 18px;min-height:150vh}.text-block-container p{text-indent:60px}.section-kicker{left:18px}.content-section{padding:90px 18px}.section-head{margin-bottom:64px}.experience-row{grid-template-columns:1fr}.experience-row>*:last-child{grid-column:auto}.showcase-grid{grid-template-columns:1fr;margin-top:48px}.showcase-card{min-height:280px}.contact-link{flex-direction:column;gap:6px}.card-info{display:block}.card-meta{max-width:100%}.open-label{display:inline-flex;margin-top:8px}.info-cell{font-size:15px;padding:10px}#slider-symbol{font-size:200px}.detail-row{grid-template-columns:1fr}.modal-media-grid{margin-top:64px}.media-work video{min-height:240px}.script-frame{height:320px}.model-gallery{grid-template-columns:1fr}.model-shot:first-child:nth-last-child(7){grid-column:auto}.modal-body{padding-left:18px;padding-right:18px}.modal-title{margin-bottom:48px}.modal-summary{margin-left:0}.card-index{top:72px;left:18px}}
+    @media(max-width:480px){.yellow-text-section{--pscale:.4}.text-block-container p{text-indent:40px}.header-group .cell{font-size:15px;padding:9px 11px}.section-title{font-size:46px}footer{font-size:12px}}
+    @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important}body,button,a,.gear-item{cursor:auto!important}#fiber-cursor{display:none}.gear-item{transform:none!important}.bg-video{display:none}#background-wrapper .video-fallback{opacity:1}#product-slider-overlay{position:relative;clip-path:none!important;-webkit-clip-path:none!important;height:auto;pointer-events:auto}#product-slider-track{display:block;transform:none!important}.project-card{height:82vh}#loop-scroll-spacer{display:none}#slider-symbol{display:none}.bottom-title-text{transform:none!important;filter:none!important}}
+  </style>
+</head>
+<body>
+  <canvas id="fiber-cursor" aria-hidden="true"></canvas>
+  <div id="background-wrapper" aria-hidden="true">
+    <video id="bg-video" class="bg-video" playsinline webkit-playsinline autoplay muted preload="auto">
+      <source src="./assets/hero-replaced.mp4" type="video/mp4">
+    </video>
+    <div class="video-fallback"><span>△</span></div>
+  </div>
+
+  <header id="header-container">
+    <div id="header-left" class="header-group"><a class="cell" id="cell-brand" href="#top">AI TRAINER™</a><span class="cell" id="clock-text"></span></div>
+    <nav id="header-center" class="header-group" aria-label="主导航"><a class="cell" href="#about">ME</a><a class="cell" href="#work">项目</a><a class="cell" href="#experience">经历</a><a class="cell" href="#skills">技能</a></nav>
+    <div id="header-right" class="header-group"><button class="cell" id="music-toggle" type="button" aria-pressed="false" aria-label="播放背景音乐" title="背景音乐">🔇</button><a class="cell" id="resume-link" href="#resume">简历</a><a class="cell" id="social-link" href="#contact">联系</a><button class="cell" id="menu-toggle-btn" aria-expanded="false" aria-controls="mobile-menu-overlay">菜单</button></div>
+  </header>
+  <div id="mobile-menu-overlay" aria-hidden="true"><nav class="mobile-menu-content" aria-label="移动端导航"><span class="cell" id="mobile-clock"></span><button class="cell" id="music-toggle-mobile" type="button" aria-pressed="false" aria-label="播放背景音乐">🔇</button><a class="cell" href="#about">ME</a><a class="cell" href="#work">项目作品</a><a class="cell" href="#experience">实践经历</a><a class="cell" href="#skills">技能</a><a class="cell" href="#resume">简历</a><a class="cell" href="#contact">联系我</a></nav></div>
+
+  <main id="top">
+    <div id="bottom-title-container"><h1 class="bottom-title-text">训练数据，也训练判断。<br>让模型在真实问题中表现得更好。</h1></div>
+    <div class="hero-spacer" aria-hidden="true"></div>
+
+    <section id="about" class="yellow-text-section" aria-labelledby="about-label">
+      <span class="section-kicker" id="about-label">01 / 关于我 — About</span>
+      <div class="parallax-layer back">
+        <img class="gear-item item-jacket" src="https://order-twine-70493179.figma.site/_components/v2/5922cc7522062a402e02d607e26cc654a692d2ad/jacket.fca57bc0.png" data-speed=".14" data-drift="-.22" data-rot="-.6" alt="">
+        <img class="gear-item item-gaiters" src="https://order-twine-70493179.figma.site/_components/v2/5922cc7522062a402e02d607e26cc654a692d2ad/gaiters.aa2524de.png" data-speed=".42" data-drift=".26" data-rot="-1" alt="">
+      </div>
+      <div class="text-block-container">
+        <p>我关注的不是模型看起来有多聪明，而是它在真实任务中，能否给出稳定、可信、可复现的结果。</p>
+        <p>从数据标注 ◇ 规则制定 ◇ SFT 数据构造，到模型评测与 Badcase 分析，我把模糊问题拆成可以执行的标准。</p>
+        <p>我习惯追问每一个判断：好答案为什么好？错误从哪里发生？Rubric 是否真的区分了质量？</p>
+        <p>工具会变化，但方法不变：理解场景 → 定义标准 → 构造数据 → 验证结果 → 迭代系统。</p>
+        <p>目标是成为连接用户需求、数据质量与模型能力的 AI 训练师，让每一次迭代都有证据。</p>
+      </div>
+      <div class="parallax-layer front">
+        <img class="gear-item item-shorts" src="https://order-twine-70493179.figma.site/_components/v2/5922cc7522062a402e02d607e26cc654a692d2ad/shorts.1a032e36.png" data-speed=".44" data-drift=".28" data-rot=".9" alt="">
+        <img class="gear-item item-cap" src="https://order-twine-70493179.figma.site/_components/v2/5922cc7522062a402e02d607e26cc654a692d2ad/cap.b10e4e2c.png" data-speed=".46" data-drift="-.30" data-rot="1.4" alt="">
+        <img class="gear-item item-scarf" src="https://order-twine-70493179.figma.site/_components/v2/5922cc7522062a402e02d607e26cc654a692d2ad/scarf.427effaf.png" data-speed=".30" data-drift=".24" data-rot="-1.2" alt="">
+        <img class="gear-item item-backpack" src="https://order-twine-70493179.figma.site/_components/v2/5922cc7522062a402e02d607e26cc654a692d2ad/backpack.0558dccb.png" data-speed=".18" data-drift=".16" data-rot=".5" alt="">
+        <img class="gear-item item-boot" src="https://order-twine-70493179.figma.site/_components/v2/5922cc7522062a402e02d607e26cc654a692d2ad/boot.545d53aa.png" data-speed=".60" data-drift="-.30" data-rot="1.8" alt="">
+      </div>
+    </section>
+
+    <section id="work" aria-label="AI 项目作品"><div id="loop-scroll-spacer"><div class="spacer-caption">Selected<br>AI Work</div></div></section>
+    <div id="product-slider-overlay" aria-hidden="true"><div id="product-slider-track"></div></div><div id="slider-symbol" aria-hidden="true">◇</div>
+
+    <section id="experience" class="content-section"><div class="section-head"><span class="eyebrow">02 / 工作与实践</span><h2 class="section-title">Experience<br>in practice</h2></div><div id="experience-list"></div></section>
+    <section id="skills" class="content-section dark"><div class="section-head"><span class="eyebrow">03 / 能力工具箱</span><h2 class="section-title">Systems,<br>not buzzwords</h2></div><div class="skill-cloud" id="skill-cloud"></div><div class="showcase-grid" id="showcase-grid" aria-label="扩展作品集"></div></section>
+    <section id="resume" class="content-section"><div class="section-head"><span class="eyebrow">04 / 在线简历</span><h2 class="section-title">Resume</h2></div><div class="resume-grid"><div><span class="eyebrow">求职方向</span></div><div><p class="resume-copy">AI 训练师 / AI 数据与模型评测方向。擅长把复杂任务转化为清晰规则、可靠数据和可验证结果。</p><div class="resume-actions"><button class="action disabled" type="button" disabled title="真实简历上传后开放">简历待上传 ↓</button><a class="action" href="#contact">发起联系 →</a></div></div></div></section>
+    <section id="contact" class="content-section dark"><div class="section-head"><span class="eyebrow">05 / 联系我</span><h2 class="section-title">Let's build<br>better AI</h2></div><div class="contact-links"><a class="contact-link" href="mailto:799159852@qq.com"><span>EMAIL</span><span>799159852@qq.com ↗</span></a><a class="contact-link" href="https://github.com/17332635319" target="_blank" rel="noreferrer"><span>GITHUB</span><span>17332635319 ↗</span></a><div class="contact-link"><span>WECHAT</span><span>17332635319</span></div></div></section>
+  </main>
+  <footer><span>AI TRAINER™</span><span>Portfolio / 2026</span></footer>
+
+  <div id="project-modal" role="dialog" aria-modal="true" aria-labelledby="modal-title" aria-hidden="true"><div class="modal-top"><span class="cell">CASE STUDY</span><button class="cell" id="modal-close">关闭 ×</button></div><article class="modal-body"><div class="modal-category" id="modal-category"></div><h2 class="modal-title" id="modal-title"></h2><p class="modal-summary" id="modal-summary"></p><div class="modal-media-grid" id="modal-media"></div><div class="detail-grid" id="modal-details"></div></article></div>
+  <audio id="background-music" loop autoplay preload="auto"><source src="./assets/audio/terrified.mp3" type="audio/mpeg"></audio>
+
+  <script src="./fiber-cursor.js"></script>
+  <script>
+    const profileData = {
+      name: 'AI TRAINER™',
+      role: 'AI 训练师 / AI 数据与模型评测',
+      projects: [
+        { title:'模型评测系统', category:'Model Evaluation', summary:'建立可解释、可复用的模型回答评测框架。此处为结构演示，等待替换为真实项目。', background:'待补充：业务场景、目标模型与评测范围。', responsibilities:'待补充：你负责的任务边界、协作角色与决策内容。', process:'任务拆解 → Rubric 设计 → 样本构建 → 双盲评测 → 一致性校准 → 报告输出', tools:'Rubric / Badcase Analysis / JSON / Python', problems:'待补充：评测标准歧义、标注一致性或覆盖率问题。', solutions:'待补充：你采用的校准、抽检、仲裁或自动化方案。', results:'待补充：请填写真实的效率、质量或模型指标变化。', image:'./assets/previews/fullscreen/project-01-preview.png' },
+        { title:'SFT 数据构造', category:'Data Training', summary:'围绕目标能力设计指令、答案与质量控制流程。此处为结构演示，等待替换为真实项目。', background:'待补充：目标能力、数据规模与应用场景。', responsibilities:'待补充：数据策略、生产流程、质检或项目管理职责。', process:'能力定义 → 数据配比 → Prompt 设计 → 样本生产 → 清洗去重 → 验收', tools:'SFT / Prompt Engineering / Data Cleaning / API', problems:'待补充：长尾覆盖、答案同质化或数据污染问题。', solutions:'待补充：规则迭代、自动检测与人工复核闭环。', results:'待补充：请填写真实的数据规模、通过率或效果提升。', image:'./assets/previews/fullscreen/project-02-preview.png' },
+        { title:'多模态数据', category:'Multimodal', summary:'面向图文任务组织数据规范、标注流程与复杂 Badcase。此处为结构演示。', background:'待补充：图片、视频或音频任务的真实背景。', responsibilities:'待补充：标注规范、多模态理解、质检与交付职责。', process:'场景盘点 → 标签体系 → 边界样本 → 标注执行 → 交叉质检 → 复盘', tools:'Multimodal / Annotation / Rubric / Quality Control', problems:'待补充：主观判断、信息缺失或跨模态对齐问题。', solutions:'待补充：判定树、示例库和争议样本仲裁机制。', results:'待补充：请填写真实交付量与一致性指标。', image:'./assets/previews/fullscreen/project-04-preview.png' },
+        { title:'AI 自动化工作流', category:'AI Automation', summary:'通过 API 与低代码工具减少重复处理，让数据流转可追踪。此处为结构演示。', background:'待补充：原始工作流、耗时节点和自动化目标。', responsibilities:'待补充：需求梳理、流程设计、接口联调与验收职责。', process:'流程审计 → 节点拆分 → API 编排 → 异常兜底 → 日志记录 → 迭代', tools:'Python / API / JSON / Dify / Codex / GitHub', problems:'待补充：脏数据、接口异常或人工确认节点。', solutions:'待补充：校验规则、重试机制与人工回退路径。', results:'待补充：请填写真实节省时间与错误率变化。', image:'./assets/previews/fullscreen/project-03-preview.png' }
+      ],
+      experiences:[
+        { period:'时间待补充', role:'AI 数据 / 模型评测', detail:'请替换为真实公司、团队、项目范围，以及你承担的关键职责和成果。' },
+        { period:'时间待补充', role:'数据质检 / 规则制定', detail:'请补充规则建设、质量抽检、人员协同、问题复盘等真实实践。' },
+        { period:'时间待补充', role:'项目实践 / AI 自动化', detail:'请补充个人项目、课程实践或可公开展示的自动化工作流。' }
+      ],
+      skills:['AI 模型评测','数据标注','数据清洗','SFT','Prompt Engineering','多模态数据','Rubric','Badcase 分析','Python','API','JSON','Codex','VS Code','Dify','GitHub'],
+      showcases:[
+        { title:'AIGC 作品集', category:'AIGC Portfolio', summary:'展示使用 AI 参与创作与制作的影像作品。', symbol:'✦', media:[{title:'黑神话钟馗',src:'./assets/aigc/black-myth-zhongkui.mp4',scriptSrc:'./assets/aigc/black-myth-script.txt',frames:['01.png','02.png','03.png','04.png','05.png','06.png','07.png','08.png'].map(name=>`./assets/aigc/black-myth-frames/${name}`)},{title:'深夜惊魂：走廊秘密',src:'./assets/aigc/midnight-corridor.mp4'},{title:'8月17日',src:'./assets/aigc/august-17.mp4'}], details:[] },
+        { title:'建模作品集', category:'3D Modeling Portfolio', summary:'展示室内空间、家具拓扑与角色模型的建模及材质效果。', symbol:'◇', gallery:[{title:'餐饮空间建模',src:'./assets/modeling/interior-restaurant.png'},{title:'办公空间建模',src:'./assets/modeling/interior-office.png'},{title:'座椅拓扑结构',src:'./assets/modeling/chair-topology.png'},{title:'角色灰模',src:'./assets/modeling/orc-clay.png'},{title:'角色材质效果',src:'./assets/modeling/orc-textured.png'},{title:'吉祥物灰模',src:'./assets/modeling/mascot-clay.png'},{title:'吉祥物材质效果',src:'./assets/modeling/mascot-textured.png'}], details:[] }
+      ]
+    };
+
+    const $ = (s, p=document) => p.querySelector(s), $$ = (s,p=document) => [...p.querySelectorAll(s)];
+    const clamp=(n,a=0,b=1)=>Math.min(b,Math.max(a,n)), lerp=(a,b,t)=>a+(b-a)*t, ease=t=>t<.5?4*t*t*t:1-Math.pow(-2*t+2,3)/2;
+    const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const hero=$('.hero-spacer'), about=$('#about'), video=$('#bg-video'), title=$('.bottom-title-text'), slider=$('#product-slider-overlay'), track=$('#product-slider-track'), symbol=$('#slider-symbol'), loop=$('#loop-scroll-spacer');
+    const symbols=['◇','≠','→','✦','○','△','□']; let lastIndex=-1, savedFocus=null, seekStamp=0;
+
+
+    profileData.projects.forEach((p,i)=>{ const card=document.createElement('button'); card.className='project-card'; card.dataset.index=i; card.innerHTML=`<img src="${p.image}" alt="${p.title} 项目视觉"><span class="card-index">0${i+1} / 0${profileData.projects.length}</span><span class="card-info"><span class="card-meta"><span class="info-cell">${p.title}</span><span class="info-cell">${p.category}</span></span><span class="info-cell open-label">查看详情 ↗</span></span>`; card.querySelector('img').addEventListener('error',()=>card.classList.add('is-fallback')); track.append(card); });
+    profileData.experiences.forEach(x=>$('#experience-list').insertAdjacentHTML('beforeend',`<div class="experience-row"><span>${x.period}</span><strong>${x.role}</strong><p class="placeholder">${x.detail}</p></div>`));
+    profileData.skills.forEach(x=>$('#skill-cloud').insertAdjacentHTML('beforeend',`<span class="skill">${x}</span>`));
+    profileData.showcases.forEach((x,i)=>$('#showcase-grid').insertAdjacentHTML('beforeend',`<button class="showcase-card" type="button" data-index="${i}" data-symbol="${x.symbol}" aria-label="打开${x.title}"><span class="showcase-card-top"><span>0${i+1} / 0${profileData.showcases.length}</span><span>${x.category}</span></span><strong class="showcase-card-title">${x.title}</strong><span class="showcase-card-action">进入 ↗</span></button>`));
+
+    function clock(){ const d=new Date(), time=d.toLocaleTimeString('zh-CN',{hour12:false}), date=d.toLocaleDateString('zh-CN',{weekday:'short',month:'short',day:'numeric',year:'numeric'}); $('#clock-text').textContent=`${time} (CST) ${date}`; $('#mobile-clock').textContent=`${time} · CST`; } clock(); setInterval(clock,1000);
+    const menuBtn=$('#menu-toggle-btn'), menu=$('#mobile-menu-overlay');
+    function setMenu(open){ menu.classList.toggle('active',open); menu.setAttribute('aria-hidden',String(!open)); menuBtn.setAttribute('aria-expanded',String(open)); menuBtn.textContent=open?'关闭':'菜单'; }
+    menuBtn.addEventListener('click',()=>setMenu(!menu.classList.contains('active'))); $$('#mobile-menu-overlay a').forEach(a=>a.addEventListener('click',()=>setMenu(false)));
+
+    const music=$('#background-music'), musicButtons=[$('#music-toggle'),$('#music-toggle-mobile')]; let musicWanted=true, musicTouched=false; music.volume=.34;
+    function musicIsPlaying(){return !music.paused&&!music.ended&&music.readyState>1}
+    function syncMusicButtons(){const playing=musicIsPlaying();musicButtons.forEach(btn=>{btn.textContent=playing?'🔊':'🔇';btn.setAttribute('aria-pressed',String(playing));btn.setAttribute('aria-label',playing?'关闭背景音乐':'播放背景音乐');btn.title=playing?'关闭背景音乐':'播放背景音乐'});}
+    async function requestMusic(){if(!musicWanted)return false;try{await music.play();syncMusicButtons();return true}catch{syncMusicButtons();return false}}
+    function stopMusic(){musicWanted=false;music.pause();syncMusicButtons()}
+    music.addEventListener('play',syncMusicButtons);music.addEventListener('playing',syncMusicButtons);music.addEventListener('pause',syncMusicButtons);music.addEventListener('error',syncMusicButtons);
+    musicButtons.forEach(btn=>btn.addEventListener('click',async e=>{e.stopPropagation();musicTouched=true;if(musicIsPlaying())stopMusic();else{musicWanted=true;await requestMusic()}}));
+    function unlockMusic(e){if(e.target?.closest?.('#music-toggle,#music-toggle-mobile'))return;if(!musicTouched&&musicWanted)requestMusic()}
+    addEventListener('pointerdown',unlockMusic,{capture:true,passive:true});addEventListener('touchstart',unlockMusic,{capture:true,passive:true});addEventListener('keydown',unlockMusic,{capture:true});
+    addEventListener('pageshow',requestMusic);document.addEventListener('DOMContentLoaded',requestMusic);music.addEventListener('canplay',requestMusic,{once:true});requestMusic();syncMusicButtons();
+
+    function prime(){ if(reduced)return; video.muted=true; const promise=video.play(); if(promise)promise.then(()=>video.pause()).catch(()=>{}); }
+    video.addEventListener('loadedmetadata',prime,{once:true}); video.addEventListener('error',()=>$('#background-wrapper').classList.add('is-fallback')); addEventListener('touchstart',prime,{once:true,passive:true}); addEventListener('click',prime,{once:true,passive:true});
+    $$('.gear-item').forEach(img=>img.addEventListener('error',()=>img.style.display='none'));
+
+    const gearStates=new Map();
+    $$('.gear-item').forEach(el=>{
+      const state={x:0,y:0,vx:0,vy:0,spin:0,angle:0,dragging:false,lastX:0,lastY:0,lastT:0}; gearStates.set(el,state);
+      el.addEventListener('pointerdown',e=>{e.preventDefault();state.dragging=true;state.vx=state.vy=state.spin=0;state.lastX=e.clientX;state.lastY=e.clientY;state.lastT=performance.now();el.classList.add('is-dragging');el.style.zIndex='30';el.setPointerCapture(e.pointerId)});
+      el.addEventListener('pointermove',e=>{if(!state.dragging)return;const now=performance.now(),dt=Math.max(8,now-state.lastT),dx=e.clientX-state.lastX,dy=e.clientY-state.lastY;state.x+=dx;state.y+=dy;state.vx=dx/dt*16.67;state.vy=dy/dt*16.67;state.spin=state.vx*.16;state.lastX=e.clientX;state.lastY=e.clientY;state.lastT=now});
+      const release=e=>{if(!state.dragging)return;state.dragging=false;el.classList.remove('is-dragging');el.style.zIndex='';if(el.hasPointerCapture?.(e.pointerId))el.releasePointerCapture(e.pointerId)};
+      el.addEventListener('pointerup',release);el.addEventListener('pointercancel',release);
+      el.addEventListener('dblclick',()=>{state.x=state.y=state.vx=state.vy=state.spin=state.angle=0});
+    });
+
+    const modal=$('#project-modal'), modalClose=$('#modal-close');
+    function openModalEntry(p,fields,hash,state){if(!p)return;savedFocus=document.activeElement;$('#modal-category').textContent=p.category;$('#modal-title').textContent=p.title;$('#modal-summary').textContent=p.summary;const videos=(p.media||[]).map(item=>{const materials=item.frames?.length?`<aside class="work-materials"><div class="material-heading"><strong>首尾帧</strong><span>${item.frames.length} Frames</span></div><div class="frame-grid">${item.frames.map((src,i)=>`<a class="frame-link" href="${src}" target="_blank" rel="noreferrer" aria-label="查看第${i+1}张首尾帧"><img src="${src}" loading="lazy" alt="${item.title} 首尾帧 ${i+1}"><span class="frame-number">0${i+1}</span></a>`).join('')}</div><div class="script-panel"><div class="material-heading"><strong>分镜脚本</strong><span>Shot List</span></div><iframe class="script-frame" src="${item.scriptSrc}" title="${item.title} 分镜脚本"></iframe></div></aside>`:'';return`<figure class="media-work${materials?' has-materials':''}"><video controls playsinline preload="metadata" src="${item.src}" aria-label="${item.title}">您的浏览器不支持视频播放。</video>${materials}</figure>`}).join('');const gallery=p.gallery?.length?`<div class="model-gallery">${p.gallery.map(item=>`<a class="model-shot" href="${item.src}" target="_blank" rel="noreferrer" aria-label="查看${item.title}原图"><img src="${item.src}" loading="lazy" alt="${item.title}"><span class="model-shot-label">${item.title} ↗</span></a>`).join('')}</div>`:'';$('#modal-media').innerHTML=videos+gallery;$('#modal-details').innerHTML=fields.map(([k,v])=>`<div class="detail-row"><span class="eyebrow">${k}</span><div class="detail-value">${v}</div></div>`).join('');modal.classList.add('open');modal.setAttribute('aria-hidden','false');document.body.classList.add('modal-open');modal.scrollTop=0;setTimeout(()=>modalClose.focus(),50);history.pushState(state,'',hash)}
+    function openProject(index){const p=profileData.projects[index];openModalEntry(p,[['项目背景',p?.background],['我的职责',p?.responsibilities],['项目流程',p?.process],['方法与工具',p?.tools],['遇到的问题',p?.problems],['解决方案',p?.solutions],['最终成果',p?.results]],`#project-${index+1}`,{project:index})}
+    function openShowcase(index){const p=profileData.showcases[index];openModalEntry(p,p?.details||[],`#showcase-${index+1}`,{showcase:index})}
+    function closeProject(fromPop=false){ if(!modal.classList.contains('open'))return; $$('#modal-media video').forEach(video=>video.pause()); modal.classList.remove('open'); modal.setAttribute('aria-hidden','true'); document.body.classList.remove('modal-open'); if(!fromPop && (location.hash.startsWith('#project-')||location.hash.startsWith('#showcase-'))) history.back(); if(savedFocus)setTimeout(()=>savedFocus.focus(),50); }
+    track.addEventListener('click',e=>{ const card=e.target.closest('.project-card'); if(card)openProject(+card.dataset.index); }); $('#showcase-grid').addEventListener('click',e=>{const card=e.target.closest('.showcase-card');if(card)openShowcase(+card.dataset.index)}); modalClose.addEventListener('click',()=>closeProject()); addEventListener('popstate',()=>closeProject(true));
+    modal.addEventListener('keydown',e=>{ if(e.key==='Escape')closeProject(); if(e.key==='Tab'){const items=$$('button,a,[tabindex]:not([tabindex="-1"])',modal).filter(x=>!x.disabled); if(!items.length)return; const first=items[0],last=items.at(-1); if(e.shiftKey&&document.activeElement===first){e.preventDefault();last.focus()}else if(!e.shiftKey&&document.activeElement===last){e.preventDefault();first.focus()} } });
+
+    let smoothScroll=scrollY, smoothP=0, smoothReveal=0, smoothCard=0;
+    function animate(now=0){ const y=scrollY; smoothScroll=lerp(smoothScroll,y,reduced?1:.12); const heroH=hero.offsetHeight; const hp=clamp(smoothScroll/heroH); if(video.duration && !reduced && now-seekStamp>30){ const target=hp*video.duration; if(Math.abs(video.currentTime-target)>.03)video.currentTime=target; seekStamp=now; }
+      const tp=clamp(hp/.85), fade=1-clamp((tp-.3)/.7); title.style.transform=`translate3d(0,${-150*tp}px,0) scale(${1-.2*tp})`; title.style.opacity=fade; title.style.filter=`blur(${24*tp}px)`;
+      const rect=about.getBoundingClientRect(), center=rect.top+rect.height/2-innerHeight/2, p=clamp(-center/(rect.height/2+innerHeight/2),-1.2,1.2); smoothP=lerp(smoothP,p,reduced?1:.12); $$('.gear-item').forEach(el=>{const sp=+el.dataset.speed,dr=+el.dataset.drift,ro=+el.dataset.rot,state=gearStates.get(el);if(!state.dragging){state.x+=state.vx;state.y+=state.vy;state.angle+=state.spin;state.vx*=.965;state.vy*=.965;state.spin*=.96;if(Math.abs(state.vx)<.015)state.vx=0;if(Math.abs(state.vy)<.015)state.vy=0}const px=smoothP*sp*dr*520+state.x,py=-smoothP*sp*520+state.y,rot=smoothP*ro*4+state.angle;el.style.transform=`translate3d(${px}px,${py}px,0) rotate(${rot}deg)`});
+      if(!reduced){ const num=profileData.projects.length, revealPx=700, cardPx=900*(num-1), outroPx=300, loopTop=loop.getBoundingClientRect().top+y, local=y-loopTop, reveal=clamp(local/revealPx), card=clamp((local-revealPx)/cardPx), outro=1-clamp((local-revealPx-cardPx)/outroPx); smoothReveal=lerp(smoothReveal,ease(reveal),.15); smoothCard=lerp(smoothCard,card,.15); const inset=50*(1-smoothReveal); slider.style.clipPath=`inset(${inset}% ${inset}% ${inset}% ${inset}% round 3px)`; slider.style.webkitClipPath=slider.style.clipPath; slider.style.opacity=outro; slider.style.visibility=local<0||outro<=0?'hidden':'visible'; slider.style.pointerEvents=smoothReveal>.98&&outro>.2?'auto':'none'; track.style.transform=`translate3d(${-smoothCard*(num-1)*100}vw,0,0)`; $$('.project-card img').forEach((img,i)=>img.style.transform=`translate3d(${(i-smoothCard*(num-1))*2.5}%,0,0)`); const idx=Math.round(smoothCard*(num-1)); symbol.style.opacity=smoothReveal>.35&&outro>.2?'1':'0'; if(idx!==lastIndex){lastIndex=idx; symbol.style.opacity='0'; setTimeout(()=>{symbol.textContent=symbols[(idx+2)%symbols.length];symbol.style.opacity=smoothReveal>.35&&outro>.2?'1':'0'},150)} title.style.opacity=Math.min(fade,1-smoothReveal); }
+      requestAnimationFrame(animate); }
+    requestAnimationFrame(animate);
+  </script>
+</body>
+</html>
