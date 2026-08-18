@@ -246,12 +246,12 @@
     const particleStage=$('#data-particle-stage'), particleCanvas=$('#data-particle-canvas'), particleCtx=particleCanvas.getContext('2d');
     let particleDpr=1, particleW=0, particleH=0, particleSeed=7419;
     const particleRandom=()=>{particleSeed=(particleSeed*1664525+1013904223)>>>0;return particleSeed/4294967296};
-    const dataParticles=Array.from({length:4500},()=>({sx:particleRandom(),sy:particleRandom(),u:particleRandom(),v:particleRandom(),size:.5+particleRandom()*1.65,phase:particleRandom()*Math.PI*2,kind:particleRandom()}));
+    const dataParticles=Array.from({length:5600},()=>({sx:particleRandom(),sy:particleRandom(),u:particleRandom(),v:particleRandom(),size:.55+particleRandom()*1.8,phase:particleRandom()*Math.PI*2,kind:particleRandom()}));
     function resizeParticleCanvas(){particleDpr=Math.min(devicePixelRatio||1,1.5);particleW=innerWidth;particleH=innerHeight;particleCanvas.width=Math.round(particleW*particleDpr);particleCanvas.height=Math.round(particleH*particleDpr);particleCtx.setTransform(particleDpr,0,0,particleDpr,0,0)}
     function drawDataParticles(progress,now=0){
       const ctx=particleCtx,w=particleW,h=particleH;if(!w||!h)return;
       ctx.clearRect(0,0,w,h);
-      const t=ease(clamp(progress)),count=w<768?1000:dataParticles.length,cx=w*(w<768?.74:.81),cy=h*.5,r=Math.min(w,h)*(w<768?.20:.235),neckX=cx-r*1.04;
+      const t=ease(clamp(progress)),count=w<768?1300:dataParticles.length,cx=w*(w<768?.74:.81),cy=h*.5,r=Math.min(w,h)*(w<768?.20:.235),neckX=cx-r*1.04;
       ctx.save();ctx.globalCompositeOperation='lighter';
       for(let i=0;i<count;i++){
         const p=dataParticles[i],isStream=p.kind<.17,dx=p.u-p.v,dy=p.u+p.v-1;
@@ -261,12 +261,21 @@
           tx=lerp(w*.30,neckX,lane);ty=cy+(p.v-.5)*spread;
           sx=w*(.27+p.sx*.39);sy=h*(.14+p.sy*.72);
         }else{
-          tx=cx+dx*r;ty=cy+dy*r;
+          let ddx=dx,ddy=dy;
+          if(p.kind>.88){
+            const edge=p.u*4,side=Math.floor(edge),q=edge-side,inset=1-p.v*p.v*.035;
+            if(side===0){ddx=q;ddy=q-1}else if(side===1){ddx=1-q;ddy=q}else if(side===2){ddx=-q;ddy=1-q}else{ddx=q-1;ddy=-q}
+            ddx*=inset;ddy*=inset;
+          }else{
+            const radial=Math.max(.0001,Math.abs(dx)+Math.abs(dy)),biased=p.kind>.42?Math.pow(radial,.48):Math.pow(radial,1.18),push=biased/radial;
+            ddx*=push;ddy*=push;
+          }
+          tx=cx+ddx*r;ty=cy+ddy*r;
           sx=w*(.20+p.sx*.46);sy=h*(.16+p.sy*.68);
         }
         const wave=Math.sin(now*.0014+p.phase)*(1-t)*7,x=lerp(sx,tx,t)+wave,y=lerp(sy,ty,t);
-        ctx.globalAlpha=(.11+p.kind*.68)*(.42+t*.58);ctx.fillStyle=p.kind>.91?'#fff':'#cfff18';
-        const size=p.size*(isStream?1.28:.70)*(1+t*.38);
+        ctx.globalAlpha=(.16+p.kind*.72)*(.42+t*.58);ctx.fillStyle=p.kind>.91?'#fff':'#cfff18';
+        const size=p.size*(isStream?1.34:.82)*(1+t*.40);
         if(isStream&&p.u>.72){ctx.strokeStyle='#cfff18';ctx.lineWidth=.55;ctx.strokeRect(x,y,size*1.45,size*1.45)}else ctx.fillRect(x,y,size,size);
         if(!isStream&&t>.38&&i%2===0){
           const lineT=(t-.38)/.62,len=(7+p.size*18)*lineT,angle=p.phase;
@@ -280,7 +289,7 @@
         ctx.beginPath();ctx.moveTo(cx,cy-r);ctx.lineTo(cx+r,cy);ctx.lineTo(cx,cy+r);ctx.lineTo(cx-r,cy);ctx.closePath();ctx.stroke();
         const grad=ctx.createLinearGradient(w*.22,0,neckX,0);grad.addColorStop(0,'rgba(207,255,24,0)');grad.addColorStop(1,'rgba(207,255,24,.62)');ctx.strokeStyle=grad;ctx.globalAlpha=.5*form;
         for(let i=-5;i<=5;i++){ctx.beginPath();ctx.moveTo(w*.22,cy+i*r*.105);ctx.quadraticCurveTo(w*.48,cy+i*r*.045,neckX,cy+i*1.5);ctx.stroke()}
-        const glow=ctx.createRadialGradient(cx,cy,0,cx,cy,r*1.15);glow.addColorStop(0,'rgba(207,255,24,.16)');glow.addColorStop(.72,'rgba(207,255,24,.06)');glow.addColorStop(1,'rgba(207,255,24,0)');ctx.globalAlpha=form;ctx.fillStyle=glow;ctx.beginPath();ctx.moveTo(cx,cy-r*1.08);ctx.lineTo(cx+r*1.08,cy);ctx.lineTo(cx,cy+r*1.08);ctx.lineTo(cx-r*1.08,cy);ctx.closePath();ctx.fill();
+        const glow=ctx.createRadialGradient(cx,cy,0,cx,cy,r*1.15);glow.addColorStop(0,'rgba(207,255,24,.015)');glow.addColorStop(.64,'rgba(207,255,24,.035)');glow.addColorStop(.9,'rgba(207,255,24,.09)');glow.addColorStop(1,'rgba(207,255,24,0)');ctx.globalAlpha=form;ctx.fillStyle=glow;ctx.beginPath();ctx.moveTo(cx,cy-r*1.08);ctx.lineTo(cx+r*1.08,cy);ctx.lineTo(cx,cy+r*1.08);ctx.lineTo(cx-r*1.08,cy);ctx.closePath();ctx.fill();
         ctx.globalAlpha=.92*form;ctx.fillStyle='#d8ff38';ctx.shadowColor='#d8ff38';ctx.shadowBlur=12;ctx.fillRect(neckX-2,cy-2,4,4);ctx.shadowBlur=0;
       }
       ctx.restore();
@@ -331,8 +340,8 @@
     track.addEventListener('click',e=>{ const card=e.target.closest('.project-card'); if(card)openProject(+card.dataset.index); }); $('#showcase-grid').addEventListener('click',e=>{const card=e.target.closest('.showcase-card');if(card)openShowcase(+card.dataset.index)}); modalClose.addEventListener('click',()=>closeProject()); addEventListener('popstate',()=>closeProject(true));
     modal.addEventListener('keydown',e=>{ if(e.key==='Escape')closeProject(); if(e.key==='Tab'){const items=$$('button,a,[tabindex]:not([tabindex="-1"])',modal).filter(x=>!x.disabled); if(!items.length)return; const first=items[0],last=items.at(-1); if(e.shiftKey&&document.activeElement===first){e.preventDefault();last.focus()}else if(!e.shiftKey&&document.activeElement===last){e.preventDefault();first.focus()} } });
 
-    let smoothScroll=scrollY, smoothP=0, smoothReveal=0, smoothCard=0;
-    function animate(now=0){ const y=scrollY; smoothScroll=lerp(smoothScroll,y,reduced?1:.12); const heroH=hero.offsetHeight; const hp=clamp(smoothScroll/heroH), loopTop=loop.getBoundingClientRect().top+y, local=y-loopTop, particleLead=innerHeight*.72, particleLocal=local+particleLead, particlePx=1000, particleProgress=reduced?.78:clamp(particleLocal/820), particleFade=reduced?1:1-clamp((particleLocal-700)/300); particleStage.style.opacity=particleFade;particleStage.style.visibility=particleLocal<0||particleFade<=0?'hidden':'visible';drawDataParticles(particleProgress,now); if(video.duration && !reduced && now-seekStamp>30){ const target=hp*video.duration; if(Math.abs(video.currentTime-target)>.03)video.currentTime=target; seekStamp=now; }
+    let smoothScroll=scrollY, smoothP=0, smoothReveal=0, smoothCard=0, particleDrawStamp=0;
+    function animate(now=0){ const y=scrollY; smoothScroll=lerp(smoothScroll,y,reduced?1:.12); const heroH=hero.offsetHeight; const hp=clamp(smoothScroll/heroH), loopTop=loop.getBoundingClientRect().top+y, local=y-loopTop, particleLead=innerHeight*.72, particleLocal=local+particleLead, particlePx=1000, particleProgress=reduced?.78:clamp(particleLocal/820), particleFade=reduced?1:1-clamp((particleLocal-700)/300), particleVisible=particleLocal>=0&&particleFade>0; particleStage.style.opacity=particleFade;particleStage.style.visibility=particleVisible?'visible':'hidden';if(particleVisible&&(reduced||now-particleDrawStamp>30)){drawDataParticles(particleProgress,now);particleDrawStamp=now} if(video.duration && !reduced && now-seekStamp>30){ const target=hp*video.duration; if(Math.abs(video.currentTime-target)>.03)video.currentTime=target; seekStamp=now; }
       const tp=clamp(hp/.85), fade=1-clamp((tp-.3)/.7); title.style.transform=`translate3d(0,${-150*tp}px,0) scale(${1-.2*tp})`; title.style.opacity=fade; title.style.filter=`blur(${24*tp}px)`;
       const rect=about.getBoundingClientRect(), center=rect.top+rect.height/2-innerHeight/2, p=clamp(-center/(rect.height/2+innerHeight/2),-1.2,1.2); smoothP=lerp(smoothP,p,reduced?1:.12); $$('.gear-item').forEach(el=>{const sp=+el.dataset.speed,dr=+el.dataset.drift,ro=+el.dataset.rot,state=gearStates.get(el);if(!state.dragging){state.x+=state.vx;state.y+=state.vy;state.angle+=state.spin;state.vx*=.965;state.vy*=.965;state.spin*=.96;if(Math.abs(state.vx)<.015)state.vx=0;if(Math.abs(state.vy)<.015)state.vy=0}const px=smoothP*sp*dr*300+state.x,py=-smoothP*sp*150+state.y,rot=smoothP*ro*4+state.angle;el.style.transform=`translate3d(${px}px,${py}px,0) rotate(${rot}deg)`});
       if(!reduced){ const num=profileData.projects.length, revealPx=700, cardPx=900*(num-1), outroPx=300, projectLocal=particleLocal-particlePx, reveal=clamp(projectLocal/revealPx), card=clamp((projectLocal-revealPx)/cardPx), outro=1-clamp((projectLocal-revealPx-cardPx)/outroPx); smoothReveal=lerp(smoothReveal,ease(reveal),.15); smoothCard=lerp(smoothCard,card,.15); const inset=50*(1-smoothReveal); slider.style.clipPath=`inset(${inset}% ${inset}% ${inset}% ${inset}% round 3px)`; slider.style.webkitClipPath=slider.style.clipPath; slider.style.opacity=outro; slider.style.visibility=projectLocal<0||outro<=0?'hidden':'visible'; slider.style.pointerEvents=smoothReveal>.98&&outro>.2?'auto':'none'; track.style.transform=`translate3d(${-smoothCard*(num-1)*100}vw,0,0)`; $$('.project-card img').forEach((img,i)=>img.style.transform=`translate3d(${(i-smoothCard*(num-1))*2.5}%,0,0)`); const idx=Math.round(smoothCard*(num-1)); symbol.style.opacity=smoothReveal>.35&&outro>.2?'1':'0'; if(idx!==lastIndex){lastIndex=idx; symbol.style.opacity='0'; setTimeout(()=>{symbol.textContent=symbols[(idx+2)%symbols.length];symbol.style.opacity=smoothReveal>.35&&outro>.2?'1':'0'},150)} title.style.opacity=Math.min(fade,1-smoothReveal); }
