@@ -168,8 +168,8 @@
     <section id="about" class="yellow-text-section" aria-labelledby="about-label">
       <span class="section-kicker" id="about-label">01 / 关于我 — About</span>
       <div class="parallax-layer back">
-        <img class="gear-item item-jacket" src="./assets/gear/jacket.png" data-speed=".14" data-drift="-.22" data-rot="-.6" alt="">
-        <img class="gear-item item-gaiters" src="./assets/gear/gaiters.png" data-speed=".42" data-drift=".26" data-rot="-1" alt="">
+        <img class="gear-item item-jacket" src="./assets/gear/jacket.png?v=20260818b" data-speed=".14" data-drift="-.22" data-rot="-.6" alt="">
+        <img class="gear-item item-gaiters" src="./assets/gear/gaiters.png?v=20260818b" data-speed=".42" data-drift=".26" data-rot="-1" alt="">
       </div>
       <div class="text-block-container">
         <p>我关注的不是模型看起来有多聪明，而是它在真实任务中，能否给出稳定、可信、可复现的结果。</p>
@@ -179,11 +179,11 @@
         <p>目标是成为连接用户需求、数据质量与模型能力的 AI 训练师，让每一次迭代都有证据。</p>
       </div>
       <div class="parallax-layer front">
-        <img class="gear-item item-shorts" src="./assets/gear/shorts.png" data-speed=".44" data-drift=".28" data-rot=".9" alt="">
-        <img class="gear-item item-cap" src="./assets/gear/cap.png" data-speed=".46" data-drift="-.30" data-rot="1.4" alt="">
-        <img class="gear-item item-scarf" src="./assets/gear/scarf.png" data-speed=".30" data-drift=".24" data-rot="-1.2" alt="">
-        <img class="gear-item item-backpack" src="./assets/gear/backpack.png" data-speed=".18" data-drift=".16" data-rot=".5" alt="">
-        <img class="gear-item item-boot" src="./assets/gear/boot.png" data-speed=".60" data-drift="-.30" data-rot="1.8" alt="">
+        <img class="gear-item item-shorts" src="./assets/gear/shorts.png?v=20260818b" data-speed=".44" data-drift=".28" data-rot=".9" alt="">
+        <img class="gear-item item-cap" src="./assets/gear/cap.png?v=20260818b" data-speed=".46" data-drift="-.30" data-rot="1.4" alt="">
+        <img class="gear-item item-scarf" src="./assets/gear/scarf.png?v=20260818b" data-speed=".30" data-drift=".24" data-rot="-1.2" alt="">
+        <img class="gear-item item-backpack" src="./assets/gear/backpack.png?v=20260818b" data-speed=".18" data-drift=".16" data-rot=".5" alt="">
+        <img class="gear-item item-boot" src="./assets/gear/boot.png?v=20260818b" data-speed=".60" data-drift="-.30" data-rot="1.8" alt="">
       </div>
     </section>
 
@@ -253,7 +253,7 @@
 
     function prime(){ if(reduced)return; video.muted=true; const promise=video.play(); if(promise)promise.then(()=>video.pause()).catch(()=>{}); }
     video.addEventListener('loadedmetadata',prime,{once:true}); video.addEventListener('canplay',()=>$('#background-wrapper').classList.remove('is-fallback')); video.addEventListener('error',()=>$('#background-wrapper').classList.add('is-fallback')); addEventListener('touchstart',prime,{once:true,passive:true}); addEventListener('click',prime,{once:true,passive:true});
-    $$('.gear-item').forEach(img=>img.addEventListener('error',()=>img.style.display='none'));
+    $$('.gear-item').forEach(img=>{img.addEventListener('load',()=>img.style.removeProperty('display'));img.addEventListener('error',()=>{if(img.dataset.retried)return;img.dataset.retried='true';const next=new URL(img.src);next.searchParams.set('retry',Date.now());img.src=next.href})});
 
     const gearStates=new Map();
     $$('.gear-item').forEach(el=>{
