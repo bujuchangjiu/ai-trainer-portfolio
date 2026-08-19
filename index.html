@@ -86,7 +86,14 @@
     .section-head { display:grid; grid-template-columns:1fr 2fr; gap:24px; align-items:start; margin-bottom:100px; }
     .eyebrow { font-size:14px; text-transform:uppercase; letter-spacing:.08em; }
     .section-title { font-size:clamp(52px,9vw,145px); line-height:.82; letter-spacing:-.065em; text-transform:uppercase; }
-    .experience-row { display:grid; grid-template-columns:1fr 1.25fr 2fr; gap:24px; padding:28px 0; border-top:1px solid currentColor; }
+    #experience { min-height:100vh; padding-top:82px; }
+    #experience .section-head { margin-bottom:76px; }
+    #experience-list { border-bottom:1px solid currentColor; }
+    .experience-row { display:grid; grid-template-columns:.82fr 1.2fr 2.25fr; gap:24px; padding:31px 0; border-top:1px solid currentColor; align-items:start; }
+    .experience-period { font-size:18px; letter-spacing:-.02em; }
+    .experience-company { display:flex; flex-direction:column; gap:9px; font-size:21px; line-height:1.05; }
+    .experience-company span { font-size:14px; letter-spacing:.08em; text-transform:uppercase; opacity:.55; }
+    .experience-detail { font-size:18px; line-height:1.55; letter-spacing:-.015em; color:#292a25; }
     .placeholder { opacity:.56; }
     .skill-cloud { display:flex; flex-wrap:wrap; gap:8px; }
     .skill { padding:14px 16px; border:1px solid currentColor; border-radius:3px; font-size:clamp(18px,2.25vw,34px); transition:background .2s,color .2s; }
@@ -227,9 +234,8 @@
         { title:'AI 自动化工作流', category:'AI Automation', summary:'通过 API 与低代码工具减少重复处理，让数据流转可追踪。此处为结构演示。', background:'待补充：原始工作流、耗时节点和自动化目标。', responsibilities:'待补充：需求梳理、流程设计、接口联调与验收职责。', process:'流程审计 → 节点拆分 → API 编排 → 异常兜底 → 日志记录 → 迭代', tools:'Python / API / JSON / Dify / Codex / GitHub', problems:'待补充：脏数据、接口异常或人工确认节点。', solutions:'待补充：校验规则、重试机制与人工回退路径。', results:'待补充：请填写真实节省时间与错误率变化。', image:'./assets/previews/fullscreen/project-03-preview.png' }
       ],
       experiences:[
-        { period:'时间待补充', role:'AI 数据 / 模型评测', detail:'请替换为真实公司、团队、项目范围，以及你承担的关键职责和成果。' },
-        { period:'时间待补充', role:'数据质检 / 规则制定', detail:'请补充规则建设、质量抽检、人员协同、问题复盘等真实实践。' },
-        { period:'时间待补充', role:'项目实践 / AI 自动化', detail:'请补充个人项目、课程实践或可公开展示的自动化工作流。' }
+        { period:'2025.03—2026.07', company:'智谱华章科技有限公司', role:'项目助理', roleEn:'Project Assistant', detail:'负责多模态视觉数据与 AIGC 生成内容评测执行及流程协同，参与训练数据清洗、分类、Caption 描述、标注质检、规则落地和结果分析。协助推进试标拉齐、规则答疑、边界 Case 沉淀和质检复核，并使用 Dify / Codex 辅助预标注、信息提取和数据整理，提升团队交付效率。' },
+        { period:'2022.09—2025.03', company:'北京丽贝亚建筑设计院', role:'主案设计师', roleEn:'Lead Designer', detail:'负责项目深化设计，参与 10 余个中大型地产项目的深化设计与落地，项目类型涵盖酒店、会所、民宿及建筑改造；负责空间方案深化、图纸绘制、物料选型和施工对接，协调解决现场设计问题，保障项目按设计标准实施。' }
       ],
       skills:['AI 模型评测','数据标注','数据清洗','SFT','Prompt Engineering','多模态数据','Rubric','Badcase 分析','Python','API','JSON','Codex','VS Code','Dify','GitHub'],
       showcases:[
@@ -298,7 +304,7 @@
 
 
     profileData.projects.forEach((p,i)=>{ const card=document.createElement('button'); card.className='project-card'; card.dataset.index=i; card.innerHTML=`<img src="${p.image}" alt="${p.title} 项目视觉"><span class="card-index">0${i+1} / 0${profileData.projects.length}</span><span class="card-info"><span class="card-meta"><span class="info-cell">${p.title}</span><span class="info-cell">${p.category}</span></span><span class="info-cell open-label">查看详情 ↗</span></span>`; card.querySelector('img').addEventListener('error',()=>card.classList.add('is-fallback')); track.append(card); });
-    profileData.experiences.forEach(x=>$('#experience-list').insertAdjacentHTML('beforeend',`<div class="experience-row"><span>${x.period}</span><strong>${x.role}</strong><p class="placeholder">${x.detail}</p></div>`));
+    profileData.experiences.forEach(x=>$('#experience-list').insertAdjacentHTML('beforeend',`<div class="experience-row"><strong class="experience-period">${x.period}</strong><strong class="experience-company">${x.company}<span>${x.role} / ${x.roleEn}</span></strong><p class="experience-detail">${x.detail}</p></div>`));
     profileData.skills.forEach(x=>$('#skill-cloud').insertAdjacentHTML('beforeend',`<span class="skill">${x}</span>`));
     profileData.showcases.forEach((x,i)=>$('#showcase-grid').insertAdjacentHTML('beforeend',`<button class="showcase-card" type="button" data-index="${i}" data-symbol="${x.symbol}" aria-label="打开${x.title}"><span class="showcase-card-top"><span>0${i+1} / 0${profileData.showcases.length}</span><span>${x.category}</span></span><strong class="showcase-card-title">${x.title}</strong><span class="showcase-card-action">进入 ↗</span></button>`));
 
