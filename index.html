@@ -115,7 +115,8 @@
     .resume-grid { display:grid; grid-template-columns:1fr 2fr; gap:24px; }
     .resume-copy { font-size:clamp(30px,4vw,60px); line-height:1.03; letter-spacing:-.04em; }
     .resume-actions { margin-top:48px; display:flex; gap:8px; flex-wrap:wrap; }
-    .action { padding:14px 16px; border-radius:3px; background:var(--ink); color:#fff; display:inline-flex; }
+    .action { padding:14px 16px; border-radius:3px; background:var(--ink); color:#fff; display:inline-flex; transition:background .2s,color .2s,transform .2s; }
+    .action:hover,.action:focus-visible { background:#d8ff38; color:#111; transform:translateY(-2px); }
     .action.disabled { opacity:.45; cursor:not-allowed; }
     .contact-links { margin-top:80px; }
     .contact-link { display:flex; justify-content:space-between; gap:24px; padding:22px 0; border-top:1px solid currentColor; font-size:clamp(22px,4vw,66px); letter-spacing:-.04em; }
@@ -219,7 +220,7 @@
 
     <section id="experience" class="content-section"><div class="section-head"><span class="eyebrow">02 / 工作与实践</span><h2 class="section-title">Experience<br>in practice</h2></div><div id="experience-list"></div></section>
     <section id="skills" class="content-section dark"><div class="section-head"><span class="eyebrow">03 / 能力工具箱</span><h2 class="section-title">Systems,<br>not buzzwords</h2></div><div class="skill-cloud" id="skill-cloud"></div><div class="showcase-grid" id="showcase-grid" aria-label="扩展作品集"></div></section>
-    <section id="resume" class="content-section"><div class="section-head"><span class="eyebrow">04 / 在线简历</span><h2 class="section-title">Resume</h2></div><div class="resume-grid"><div><span class="eyebrow">求职方向</span></div><div><p class="resume-copy">AI 训练师 / AI 数据与模型评测方向。擅长把复杂任务转化为清晰规则、可靠数据和可验证结果。</p><div class="resume-actions"><button class="action disabled" type="button" disabled title="真实简历上传后开放">简历待上传 ↓</button><a class="action" href="#contact">发起联系 →</a></div></div></div></section>
+    <section id="resume" class="content-section"><div class="section-head"><span class="eyebrow">04 / 在线简历</span><h2 class="section-title">Resume</h2></div><div class="resume-grid"><div><span class="eyebrow">求职方向</span></div><div><p class="resume-copy">AI 训练师 / AI 数据与模型评测方向。擅长把复杂任务转化为清晰规则、可靠数据和可验证结果。</p><div class="resume-actions"><a class="action" href="./assets/resume/he-donghao-resume.pdf" target="_blank" rel="noreferrer" aria-label="打开何东昊的 PDF 简历">查看简历 ↓</a><a class="action" href="#contact">发起联系 →</a></div></div></div></section>
     <section id="contact" class="content-section dark"><div class="section-head"><span class="eyebrow">05 / 联系我</span><h2 class="section-title">Let's build<br>better AI</h2></div><div class="contact-links"><a class="contact-link" href="mailto:799159852@qq.com"><span>EMAIL</span><span>799159852@qq.com ↗</span></a><a class="contact-link" href="https://github.com/17332635319" target="_blank" rel="noreferrer"><span>GITHUB</span><span>17332635319 ↗</span></a><div class="contact-link"><span>WECHAT</span><span>17332635319</span></div></div></section>
   </main>
   <footer><span>AI TRAINER™</span><span>Portfolio / 2026</span></footer>
