@@ -1,8 +1,9 @@
 const canvas = document.querySelector('#fiber-cursor');
 
-if (canvas && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
+if (canvas && matchMedia('(hover: hover) and (pointer: fine)').matches && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
   const ctx = canvas.getContext('2d');
   if (ctx) document.documentElement.classList.add('fiber-cursor-ready');
+  canvas.dataset.animationActive = 'false';
   const fibers = Array.from({ length: 7 }, (_, i) => ({
     points: Array.from({ length: 22 }, () => ({ x: innerWidth * .5, y: innerHeight * .5 })),
     offset: (i - 3) * 2.35,
@@ -10,10 +11,10 @@ if (canvas && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
   }));
   const pointer = { x: innerWidth * .5, y: innerHeight * .5, tx: innerWidth * .5, ty: innerHeight * .5, active: false };
   const bursts = [];
-  let last = performance.now(), speed = 0;
+  let last = performance.now(), lastPointerMove = 0, speed = 0, running = false, frameId = 0;
 
   function resize() {
-    const dpr = Math.min(devicePixelRatio || 1, 2);
+    const dpr = Math.min(devicePixelRatio || 1, 1.5);
     canvas.width = Math.round(innerWidth * dpr);
     canvas.height = Math.round(innerHeight * dpr);
     canvas.style.width = `${innerWidth}px`;
@@ -24,10 +25,12 @@ if (canvas && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
   addEventListener('pointermove', e => {
     speed = Math.min(42, Math.hypot(e.clientX - pointer.tx, e.clientY - pointer.ty));
     pointer.tx = e.clientX; pointer.ty = e.clientY;
+    lastPointerMove = performance.now();
     if (!pointer.active) {
       pointer.x = pointer.tx; pointer.y = pointer.ty; pointer.active = true;
       fibers.forEach(f => f.points.forEach(p => { p.x = pointer.x; p.y = pointer.y; }));
     }
+    startLoop();
   }, { passive: true });
   addEventListener('pointerdown', e => {
     if (e.button !== undefined && e.button !== 0) return;
@@ -43,6 +46,7 @@ if (canvas && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
       };
     });
     bursts.push({ x: e.clientX, y: e.clientY, born: performance.now(), particles });
+    startLoop();
   }, { passive: true });
   document.documentElement.addEventListener('mouseleave', () => { pointer.active = false; });
 
@@ -110,10 +114,22 @@ if (canvas && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
       flash.addColorStop(1, 'rgba(216,255,56,0)');
       ctx.fillStyle = flash; ctx.beginPath(); ctx.arc(burst.x, burst.y, 11, 0, Math.PI * 2); ctx.fill();
     }
-    requestAnimationFrame(draw);
+    const idle = now - lastPointerMove > 900 && speed < .15 && bursts.length === 0;
+    if (document.hidden || (!pointer.active && bursts.length === 0) || idle) {
+      running = false; frameId = 0; canvas.dataset.animationActive = 'false'; return;
+    }
+    frameId = requestAnimationFrame(draw);
+  }
+
+  function startLoop() {
+    if (running || document.hidden) return;
+    running = true; canvas.dataset.animationActive = 'true'; last = performance.now(); frameId = requestAnimationFrame(draw);
   }
 
   resize();
   addEventListener('resize', resize);
-  requestAnimationFrame(draw);
+  document.addEventListener('visibilitychange', () => {
+    if (document.hidden) { if (frameId) cancelAnimationFrame(frameId); frameId = 0; running = false; canvas.dataset.animationActive = 'false'; }
+    else if (pointer.active || bursts.length) startLoop();
+  });
 }
